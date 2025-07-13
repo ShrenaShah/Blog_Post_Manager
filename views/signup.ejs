@@ -39,7 +39,11 @@
       <div class="col-md-6">
         <div class="card p-4">
           <h3 class="text-center mb-4">Create an Account</h3>
-          <form action="/user/signup" method="post">
+          <form
+            action="/user/signup"
+            method="post"
+            enctype="multipart/form-data"
+          >
             <div class="mb-3">
               <label for="fullName" class="form-label">
                 <i class="bi bi-person-fill"></i>Full Name
@@ -83,6 +87,19 @@
                 name="password"
                 placeholder="Create a strong password"
                 required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="profileImage" class="form-label">
+                <i class="bi bi-image-fill"></i>Profile Image (optional)
+              </label>
+              <input
+                type="file"
+                class="form-control"
+                id="profileImage"
+                name="profileImage"
+                accept="image/*"
               />
             </div>
 
