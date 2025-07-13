@@ -114,7 +114,7 @@
         <div class="px-4 pb-4">
           <h3>Comments (<%= comments.length %>)</h3>
           <% if (user) { %>
-          <form action="/comment/<%= blog._id %>" method="post" class="mb-3">
+          <form action="/blog/comment/<%= blog._id %>" method="post" class="mb-3">
             <div class="mb-3">
               <input
                 type="text"
