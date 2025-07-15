@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const commentRoute = require("./routes/comment");
 const cookieParser = require("cookie-parser");
 const userRoute = require("./routes/user");
 const blogRoute = require("./routes/blog");
@@ -35,6 +36,7 @@ app.get("/", async (req, res) => {
 
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
+app.use("/comment", commentRoute);
 
 app.listen(PORT, () => {
   console.log(`server started at port : ${PORT}`);
