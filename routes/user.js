@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const User = require("../models/user");
 
+const upload = require("../middlewares/upload");
+
 const router = Router();
 
 router.get("/signin", (req, res) => {
@@ -23,12 +25,17 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", upload.single("profileImage"), async (req, res) => {
   const { fullName, email, password } = req.body;
+  let profileImageURL = "images/user_avatar.png";
+  if (req.file) {
+    profileImageURL = `images/${req.file.filename}`;
+  }
   await User.create({
     fullName,
     email,
     password,
+    profileImageURL,
   });
   return res.redirect("/");
 });
