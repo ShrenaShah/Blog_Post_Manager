@@ -5,6 +5,7 @@ const router = Router();
 const Comment = require("../models/comment");
 const { Blog } = require("../models/blog");
 const generateBlog  = require("../services/gemini");
+const { requireAuth } = require("../middlewares/authentication");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -17,8 +18,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-
-router.get("/add_new", (req, res) => {
+// Only logged-in users can see add new blog screen
+router.get("/add_new", requireAuth, (req, res) => {
   return res.render("addBlog", {
     user: req.user,
   });
@@ -37,8 +38,12 @@ router.get("/:id", async (req, res) => {
   });
 });
 
-router.post("/", upload.single("coverImage"), async (req, res) => {
+// Only logged-in users can create blogs
+router.post("/", requireAuth, upload.single("coverImage"), async (req, res) => {
   const { title, body } = req.body;
+  if (!req.user) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
   const blog = await Blog.create({
     title,
     body,
@@ -49,7 +54,7 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
   return res.redirect(`/blog/${blog._id}`);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", requireAuth, async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
@@ -70,7 +75,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.post("/generate",async(req,res) => {
+router.post("/generate", requireAuth, async(req,res) => {
   const {title} = req.body;
   try{
   if (!title || title.trim() === "") {
